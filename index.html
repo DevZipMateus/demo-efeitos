@@ -42,37 +42,6 @@
       overflow-x: hidden;
     }
 
-    body.custom-cursor,
-    body.custom-cursor * { cursor: none !important; }
-
-    /* ════════════════════════════════
-       CURSOR PERSONALIZADO
-    ════════════════════════════════ */
-    .cur-dot {
-      position: fixed;
-      width: 8px; height: 8px;
-      background: var(--teal-light);
-      border-radius: 50%;
-      pointer-events: none;
-      z-index: 9999;
-      transform: translate(-50%, -50%);
-      transition: transform .05s, width .2s, height .2s, background .2s;
-    }
-
-    .cur-ring {
-      position: fixed;
-      width: 40px; height: 40px;
-      border: 1.5px solid rgba(114,212,224,.6);
-      border-radius: 50%;
-      pointer-events: none;
-      z-index: 9998;
-      transform: translate(-50%, -50%);
-      transition: border-color .25s, border-width .25s;
-    }
-
-    body.cursor-hover .cur-dot  { width: 12px; height: 12px; background: var(--teal); }
-    body.cursor-hover .cur-ring { border-color: var(--teal); border-width: 2px; }
-    body.cursor-text  .cur-ring { width: 3px; border-radius: 2px; background: var(--teal-light); border: none; height: 24px; }
 
     /* ════════════════════════════════
        HERO
@@ -534,10 +503,6 @@
 </head>
 <body>
 
-<!-- CURSOR -->
-<div class="cur-dot"  id="curDot"></div>
-<div class="cur-ring" id="curRing"></div>
-
 <!-- ══ HERO ══ -->
 <section id="hero">
   <div class="hero-orb hero-orb-1"></div>
@@ -597,10 +562,10 @@
     </div>
 
     <div class="tilt-card" data-tilt data-tilt-max="14" data-tilt-speed="500" data-tilt-glare="true" data-tilt-max-glare="0.25">
-      <div class="card-ico"><i class="fas fa-circle-dot"></i></div>
-      <h3>Cursor Personalizado</h3>
-      <p>Dot instantâneo + anel com lerp (interpolação suave). Reage a hover, texto e botões.</p>
-      <span class="card-tag">↑ Mova o mouse</span>
+      <div class="card-ico"><i class="fas fa-text-height"></i></div>
+      <h3>Reveal por Palavra</h3>
+      <p>Cada palavra desliza para cima individualmente conforme você rola — via GSAP scrub.</p>
+      <span class="card-tag">↑ Continue rolando</span>
     </div>
 
     <div class="tilt-card" data-tilt data-tilt-max="14" data-tilt-speed="500" data-tilt-glare="true" data-tilt-max-glare="0.25">
@@ -705,45 +670,6 @@
     gsap.ticker.add(time => lenis.raf(time * 1000));
     gsap.ticker.lagSmoothing(0);
 
-    /* ── CURSOR ── */
-    const dot  = document.getElementById('curDot');
-    const ring = document.getElementById('curRing');
-    const isMouse = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
-
-    if (isMouse) {
-      document.body.classList.add('custom-cursor');
-
-      let mx = 0, my = 0, rx = 0, ry = 0;
-
-      window.addEventListener('mousemove', e => {
-        mx = e.clientX;
-        my = e.clientY;
-        gsap.set(dot, { x: mx, y: my });
-      });
-
-      gsap.ticker.add(() => {
-        rx += (mx - rx) * 0.11;
-        ry += (my - ry) * 0.11;
-        gsap.set(ring, { x: rx, y: ry });
-      });
-
-      const hoverEls = document.querySelectorAll('a, button, .tilt-card, .btn');
-      hoverEls.forEach(el => {
-        el.addEventListener('mouseenter', () => {
-          document.body.classList.add('cursor-hover');
-          gsap.to(ring, { scale: 1.9, duration: .3 });
-        });
-        el.addEventListener('mouseleave', () => {
-          document.body.classList.remove('cursor-hover');
-          gsap.to(ring, { scale: 1, duration: .3 });
-        });
-      });
-
-      document.querySelectorAll('p, span, h1, h2, h3').forEach(el => {
-        el.addEventListener('mouseenter', () => document.body.classList.add('cursor-text'));
-        el.addEventListener('mouseleave', () => document.body.classList.remove('cursor-text'));
-      });
-    }
 
     /* ── HERO ANIMATION ── */
 
